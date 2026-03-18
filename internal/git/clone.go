@@ -16,7 +16,7 @@ func Clone(repoURL string, token string, logger *logger.Logger) (string, error) 
 
 	// создаем папку со случайным именем: modupdater-jwu8293ui(к примеру)
 
-	tmpDir, err := os.MkdirTemp("", "modupdater-*")
+	tmpDir, err := os.MkdirTemp("./cloned/", "modupdater-*")
 	if err != nil {
 		logger.Error("Failed to create a directory: %v", err)
 		return "", err
