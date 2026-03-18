@@ -49,7 +49,7 @@ func Print(results []ModuleResult) {
 				fmt.Printf("  %s %s → %s (%s)\n",
 					name, st.Current, st.Latest, st.UpdateType)
 			} else {
-				fmt.Printf("%s %s (up-to-date) \n", name, st.Current)
+				fmt.Printf("%s %s %v \n", name, st.Current, st.NeedUpdate)
 			}
 		}
 		fmt.Println("----------------------------------------------")

@@ -64,6 +64,13 @@ func Parse(modPath string, log *logger.Logger) (*ModFile, error) {
 	// заполняем Requires
 
 	for _, r := range file.Require {
+		if r.Mod.Path == "" {
+			log.Debug("skipping empty require")
+			continue
+		}
+
+		log.Debug("Adding require: %s %s", r.Mod.Path, r.Mod.Version)
+
 		res.Requires = append(res.Requires, Require{
 			Path:     r.Mod.Path,
 			Version:  r.Mod.Version,

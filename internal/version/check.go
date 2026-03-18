@@ -77,7 +77,7 @@ func Check(mod *modparser.ModFile, TurnOnIndirect bool, log *logger.Logger, Work
 
 	// обработка зависимостой
 
-	statuses := make([]Dependecies, len(mod.Requires))
+	statuses := make([]Dependecies, 0, len(mod.Requires))
 	for _, req := range mod.Requires {
 		if !TurnOnIndirect && req.Indirect {
 			continue
