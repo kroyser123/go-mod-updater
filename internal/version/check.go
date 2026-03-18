@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os/exec"
+	"sync"
 
 	"github.com/kroyser123/go-mod-updater/internal/logger"
 	"github.com/kroyser123/go-mod-updater/internal/modparser"
@@ -75,46 +76,52 @@ func Check(mod *modparser.ModFile, TurnOnIndirect bool, log *logger.Logger, Work
 	}
 	log.Debug("Parsed modules from go list: %d", len(modules))
 
-	// обработка зависимостой
+	// обработка зависимостей
+	// добавлена параллельная обработка
 
+	var wg sync.WaitGroup
+	var mu sync.Mutex
 	statuses := make([]Dependecies, 0, len(mod.Requires))
 	for _, req := range mod.Requires {
 		if !TurnOnIndirect && req.Indirect {
 			continue
 		}
-		st := Dependecies{
-			Path:     req.Path,
-			Current:  req.Version,
-			Indirect: req.Indirect,
-		}
+		wg.Add(1)
+		go func(req modparser.Require) {
+			defer wg.Done()
+			st := Dependecies{
+				Path:     req.Path,
+				Current:  req.Version,
+				Indirect: req.Indirect,
+			}
 
-		// проверяем существует ли в modules распаршенный модуль из modfile
+			// проверяем существует ли в modules распаршенный модуль из modfile
 
-		m, ok := modules[req.Path]
-		if !ok {
-			st.Error = fmt.Errorf("module was not found in go list")
+			m, ok := modules[req.Path]
+			if !ok {
+				st.Error = fmt.Errorf("module was not found in go list")
+			}
+			if m.Error != nil {
+				st.Error = m.Error.Err
+			}
+
+			// есть или нет обновления
+
+			if m.Update == nil {
+				st.Latest = m.Version
+				st.UpdateType = NoUpdate
+				st.NeedUpdate = false
+			} else {
+				st.Latest = m.Update.Version
+				st.UpdateType = UpdateType(req.Version, m.Update.Version)
+				st.NeedUpdate = true
+			}
+			mu.Lock()
 			statuses = append(statuses, st)
-			continue
-		}
-		if m.Error != nil {
-			st.Error = m.Error.Err
-			statuses = append(statuses, st)
-			continue
-		}
-
-		// есть или нет обновления
-
-		if m.Update == nil {
-			st.Latest = m.Version
-			st.UpdateType = NoUpdate
-			st.NeedUpdate = false
-		} else {
-			st.Latest = m.Update.Version
-			st.UpdateType = UpdateType(req.Version, m.Update.Version)
-			st.NeedUpdate = true
-		}
-		statuses = append(statuses, st)
+			mu.Unlock()
+		}(req)
 	}
+	wg.Wait()
 	return statuses, nil
 }
 
