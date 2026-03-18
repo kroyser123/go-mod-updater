@@ -17,7 +17,8 @@ import (
 func main() {
 	repo := flag.String("repo", "", "Git repository URL")
 	token := flag.String("token", "", "Access token")
-	showAll := flag.Bool("all", false, "Show all dependencies, not only outdated")
+	showIndirrect := flag.Bool("all", false, "Show all dependencies, not only direct")
+	showOnlyOutdated := flag.Bool("outdated", false, "Show only outdated dependencies")
 	jsonOut := flag.Bool("json", false, "Output results in JSON format")
 	debug := flag.Bool("debug", false, "Enable debug logs")
 
@@ -52,15 +53,26 @@ func main() {
 	for _, modPath := range modFiles {
 		mod, err := modparser.Parse(modPath, log)
 		if err != nil {
-			results = append(results, output.NewModuleResult(modPath, "", nil, err))
+			results = append(results, output.NewModuleResult(modPath, "", "", nil, err))
 			continue
 		}
 
 		workDir := filepath.Dir(modPath)
-		statuses, err := version.Check(mod, *showAll, log, workDir)
+		statuses, err := version.Check(mod, *showIndirrect, log, workDir)
+
+		finalStatuses := statuses
+		if err == nil && *showOnlyOutdated {
+			var filtered []version.Dependecies
+			for _, st := range statuses {
+				if st.NeedUpdate {
+					filtered = append(filtered, st)
+				}
+			}
+			finalStatuses = filtered
+		}
 
 		results = append(results,
-			output.NewModuleResult(modPath, mod.ModulePath, statuses, err),
+			output.NewModuleResult(modPath, mod.ModulePath, mod.Version, finalStatuses, err),
 		)
 	}
 

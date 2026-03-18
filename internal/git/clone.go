@@ -40,5 +40,6 @@ func Clone(repoURL string, token string, logger *logger.Logger) (string, error) 
 		os.RemoveAll(tmpDir)
 		return "", fmt.Errorf("git clone failed: %s: %v", string(output), err)
 	}
+
 	return tmpDir, nil
 }

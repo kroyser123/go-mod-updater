@@ -52,17 +52,6 @@ type GoList struct {
 
 func Check(mod *modparser.ModFile, TurnOnIndirect bool, log *logger.Logger, WorkDir string) ([]Dependecies, error) {
 
-	// скачиваем все зависимости, чтобы go list работал корректно
-
-	log.Debug("Running go mod download in: %s", WorkDir)
-	download := exec.Command("go", "mod", "download")
-	download.Dir = WorkDir
-	if out, err := download.CombinedOutput(); err != nil {
-		log.Error("failed to run go mod download: %v, output: %s", err, string(out))
-		return nil, fmt.Errorf("failed to run go mod download: %v", err)
-	}
-	log.Debug("Running go list -m -u -json all in: %s", WorkDir)
-
 	// запускаем go list
 
 	cmd := exec.Command("go", "list", "-m", "-u", "-json", "all")
@@ -77,8 +66,9 @@ func Check(mod *modparser.ModFile, TurnOnIndirect bool, log *logger.Logger, Work
 	// парсим json поток
 
 	decoder := json.NewDecoder(bytes.NewReader(Output))
-	var g GoList
+
 	for {
+		var g GoList
 		if err := decoder.Decode(&g); err != nil {
 			break
 		}
