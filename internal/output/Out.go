@@ -6,49 +6,52 @@ import (
 	"github.com/kroyser123/go-mod-updater/internal/version"
 )
 
+// Красивый CLI-вывод
+
 type ModuleResult struct {
-	ModFilePath string
-	ModulePath  string
-	Statuses    []version.Dependecies
-	Err         error
+	Path     string
+	Module   string
+	Statuses []version.Dependecies
+	Err      error
 }
 
-// Конструктор — создаёт готовый объект
-func NewModuleResult(path string, module string, statuses []version.Dependecies, err error) ModuleResult {
+func NewModuleResult(path, module string, statuses []version.Dependecies, err error) ModuleResult {
 	return ModuleResult{
-		ModFilePath: path,
-		ModulePath:  module,
-		Statuses:    statuses,
-		Err:         err,
+		Path:     path,
+		Module:   module,
+		Statuses: statuses,
+		Err:      err,
 	}
 }
 
-// Минимальный вывод
 func Print(results []ModuleResult) {
-	for _, mr := range results {
-		fmt.Println("MODULE:", mr.ModulePath)
-		fmt.Println("FILE:  ", mr.ModFilePath)
+	for _, r := range results {
+		fmt.Printf("\nMODULE: %s\n", r.Module)
+		fmt.Printf("FILE:   %s\n\n", r.Path)
 
-		if mr.Err != nil {
-			fmt.Println("ERROR:", mr.Err)
-			fmt.Println()
+		if r.Err != nil {
+			fmt.Printf("ERROR: %v\n\n", r.Err)
 			continue
 		}
-
-		for _, st := range mr.Statuses {
-			if st.Error != nil {
-				fmt.Printf("  %s  ERROR: %v\n", st.Path, st.Error)
+		for _, st := range r.Statuses {
+			if st.Path == "" {
 				continue
 			}
-
+			name := st.Path
+			if st.Indirect {
+				name += " (indirect)"
+			}
+			if st.Error != nil {
+				fmt.Printf("  %-45s ERROR: %v\n", name, st.Error)
+				continue
+			}
 			if st.NeedUpdate {
-				fmt.Printf("  %s  %s → %s (%s)\n",
-					st.Path, st.Current, st.Latest, st.UpdateType)
+				fmt.Printf("  %-45s %s → %s (%s)\n",
+					name, st.Current, st.Latest, st.UpdateType)
 			} else {
-				fmt.Printf("  %s  %s (ok)\n", st.Path, st.Current)
+				fmt.Printf("  %-45s %s\n", name, st.Current)
 			}
 		}
-
-		fmt.Println()
+		fmt.Println("----------------------------------------------")
 	}
 }

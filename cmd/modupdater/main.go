@@ -17,21 +17,21 @@ func main() {
 	token := flag.String("token", "", "Access token")
 	flag.Parse()
 
-	log := logger.NewLogger(true)
+	log := logger.NewLogger(false)
 
 	if *repo == "" {
 		log.Error("No repo URL provided")
 		return
 	}
 
-	// 1. Clone
+	// клонируем репозиторий
 	tmpDir, err := git.Clone(*repo, *token, log)
 	if err != nil {
 		log.Error("Clone failed: %v", err)
 		return
 	}
 
-	// 2. Find go.mod
+	// ищем go.mod
 	modFiles, err := modfinder.Find(tmpDir, log)
 	if err != nil {
 		log.Error("Find failed: %v", err)
@@ -40,7 +40,7 @@ func main() {
 
 	var results []output.ModuleResult
 
-	// 3. Process each go.mod
+	// проходим по всем modFiles и чекаем апдейты
 	for _, modPath := range modFiles {
 		mod, err := modparser.Parse(modPath, log)
 		if err != nil {
@@ -57,6 +57,6 @@ func main() {
 		)
 	}
 
-	// 4. Print
+	// вывод в консоль
 	output.Print(results)
 }
