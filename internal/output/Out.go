@@ -42,14 +42,14 @@ func Print(results []ModuleResult) {
 				name += " (indirect)"
 			}
 			if st.Error != nil {
-				fmt.Printf("  %-45s ERROR: %v\n", name, st.Error)
+				fmt.Printf("  %s ERROR: %v\n", name, st.Error)
 				continue
 			}
 			if st.NeedUpdate {
-				fmt.Printf("  %-45s %s → %s (%s)\n",
+				fmt.Printf("  %s %s → %s (%s)\n",
 					name, st.Current, st.Latest, st.UpdateType)
 			} else {
-				fmt.Printf("  %-45s %s\n", name, st.Current)
+				fmt.Printf("%s %s (up-to-date) \n", name, st.Current)
 			}
 		}
 		fmt.Println("----------------------------------------------")
