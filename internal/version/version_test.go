@@ -2,6 +2,7 @@ package version
 
 import "testing"
 
+//Тестирую функцию UpdateType
 func TestUpdateType(t *testing.T) {
 	tests := []struct {
 		name     string
