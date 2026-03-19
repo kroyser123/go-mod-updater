@@ -45,11 +45,11 @@ func Print(results []ModuleResult) {
 				name += " (indirect)"
 			}
 			if st.Error != nil {
-				fmt.Printf("  %s ERROR: %v\n", name, st.Error)
+				fmt.Printf("%s ERROR: %v\n", name, st.Error)
 				continue
 			}
 			if st.NeedUpdate {
-				fmt.Printf("  %s %s → %s (%s)\n",
+				fmt.Printf("%s %s → %s (%s)\n",
 					name, st.Current, st.Latest, st.UpdateType)
 			} else {
 				fmt.Printf("%s %s \n", name, st.Current)
