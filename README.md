@@ -1,7 +1,8 @@
-go-mod-updater
-CLI‑утилита для анализа Go‑модулей и проверки обновлений зависимостей.
+## go-mod-updater
+```
+*CLI‑утилита для анализа Go‑модулей и проверки обновлений зависимостей.*
 
-Функционал
+**Функционал**
 Клонирует Git‑репозиторий (публичный или приватный)
 
 Находит все go.mod файлы (поддержка монорепозиториев)
@@ -13,8 +14,10 @@ CLI‑утилита для анализа Go‑модулей и проверк
 Показывает, какие зависимости можно обновить
 
 Определяет тип обновления: patch / minor / major
+```
 
-Установка
+## Установка
+```
 bash
 git clone https://github.com/kroyser123/go-mod-updater.git
 cd go-mod-updater
@@ -32,7 +35,9 @@ bash
 JSON‑вывод
 bash
 ./modupdater -repo https://github.com/go-kit/kit.git -outdated -json
-Флаги
+```
+## Флаги
+```
 Флаг	Описание
 -repo	URL Git‑репозитория
 -token	Токен для приватных репозиториев
@@ -40,8 +45,9 @@ bash
 -all	Включать indirect‑зависимости
 -json	Вывод в JSON
 -debug	Отладочные логи
-Пример вывода (человекочитаемый формат)
-Code
+```
+## Пример вывода (человекочитаемый формат)
+```
 MODULE: github.com/go-kit/kit
 FILE:   C:\Users\9E8E~1\AppData\Local\Temp\modupdater-747241387\go.mod
 GO:     1.17
@@ -51,10 +57,12 @@ github.com/go-logfmt/logfmt           v0.5.1 → v0.6.0   (minor)
 github.com/nats-io/nats-server/v2     v2.8.4 → v2.12.5  (minor)
 github.com/prometheus/client_golang   v1.11.1 → v1.23.2 (minor)
 github.com/openzipkin/zipkin-go       v0.2.5 → v0.4.3   (minor)
-Пример JSON‑вывода
-json
+```
+## Пример JSON‑вывода
+```
+
 {
-  "Module": "github.com/go-kit/kit",
+"Module": "github.com/go-kit/kit",
   "GoVersion": "1.17",
   "Statuses": [
     {
@@ -91,7 +99,8 @@ json
     }
   ]
 }
-Особенности
+```
+## Особенности
 Shallow clone (--depth 1) для скорости
 
 Работает с репозиториями без тегов
