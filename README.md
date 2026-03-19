@@ -23,28 +23,38 @@ bash
 git clone https://github.com/kroyser123/go-mod-updater.git
 cd go-mod-updater
 go build -o modupdater cmd/modupdater/main.go
-Использование
+```
+## Использование
+```
 Базовый запуск
 bash
 ./modupdater -repo https://github.com/go-kit/kit.git
+
 Только устаревшие зависимости
 bash
 ./modupdater -repo https://github.com/go-kit/kit.git -outdated
+
 С учётом indirect‑зависимостей
 bash
 ./modupdater -repo https://github.com/go-kit/kit.git -outdated -all
+
 JSON‑вывод
 bash
 ./modupdater -repo https://github.com/go-kit/kit.git -outdated -json
 ```
 ## Флаги
 ```
-Флаг	Описание
+ Флаг	Описание
 -repo	URL Git‑репозитория
+
 -token	Токен для приватных репозиториев
+
 -outdated	Показывать только устаревшие зависимости
+
 -all	Включать indirect‑зависимости
+
 -json	Вывод в JSON
+
 -debug	Отладочные логи
 ```
 ## Пример вывода (человекочитаемый формат)
