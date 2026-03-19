@@ -71,45 +71,34 @@ github.com/openzipkin/zipkin-go       v0.2.5 → v0.4.3   (minor)
 ```
 ## Пример JSON‑вывода
 ```
-
-{
-"Module": "github.com/go-kit/kit",
-  "GoVersion": "1.17",
-  "Statuses": [
-    {
-      "Path": "github.com/go-kit/log",
-      "Current": "v0.2.0",
-      "Latest": "v0.2.1",
-      "Indirect": false,
-      "NeedUpdate": true,
-      "UpdateType": "patch"
-    },
-    {
-      "Path": "github.com/golang-jwt/jwt/v4",
-      "Current": "v4.0.0",
-      "Latest": "v4.5.2",
-      "Indirect": false,
-      "NeedUpdate": true,
-      "UpdateType": "minor"
-    },
-    {
-      "Path": "github.com/nats-io/nats-server/v2",
-      "Current": "v2.8.4",
-      "Latest": "v2.12.5",
-      "Indirect": false,
-      "NeedUpdate": true,
-      "UpdateType": "minor"
-    },
-    {
-      "Path": "github.com/rabbitmq/amqp091-go",
-      "Current": "v1.2.0",
-      "Latest": "v1.10.0",
-      "Indirect": false,
-      "NeedUpdate": true,
-      "UpdateType": "minor"
-    }
-  ]
-}
+[
+  {
+    "Path": "C:\\Users\\9E8E~1\\AppData\\Local\\Temp\\modupdater-1188082900\\go.mod",
+    "Module": "github.com/go-kit/kit",
+    "GoVersion": "1.17",
+    "Statuses": [
+      {
+        "Path": "github.com/aws/aws-sdk-go-v2",
+        "Current": "v1.9.1",
+        "Latest": "v1.41.4",
+        "Indirect": false,
+        "NeedUpdate": true,
+        "UpdateType": "minor",
+        "Error": null
+      },
+      {
+        "Path": "github.com/aws/aws-sdk-go",
+        "Current": "v1.40.45",
+        "Latest": "v1.55.8",
+        "Indirect": false,
+        "NeedUpdate": true,
+        "UpdateType": "minor",
+        "Error": null
+      }
+    ],
+    "Err": null
+  }
+]
 ```
 ## Особенности
 Shallow clone (--depth 1) для скорости
