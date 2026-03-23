@@ -33,11 +33,19 @@ func main() {
 
 	// клонируем репозиторий
 
-	tmpDir, err := git.Clone(*repo, *token, log)
+	tmpDir, remove, err := git.Clone(*repo, *token, log)
 	if err != nil {
 		log.Error("Clone failed: %v", err)
 		return
 	}
+	log.Info("=== Repository cloned to: %s ===", tmpDir)
+	log.Info("=== Cleanup function created ===")
+
+	defer func() {
+		log.Info("!!! DEFER CLEANUP CALLED !!!") // Это сообщение должно появиться
+		remove()
+		log.Info("!!! DEFER CLEANUP FINISHED !!!")
+	}()
 
 	// Ищем go.mod файлы
 

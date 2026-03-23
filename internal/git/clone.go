@@ -10,16 +10,15 @@ import (
 )
 
 // клонируем репозиторий
-func Clone(repoURL string, token string, logger *logger.Logger) (string, error) {
+func Clone(repoURL string, token string, logger *logger.Logger) (string, func(), error) {
 	logger.Info("Cloning repository %s", repoURL)
 	logger.Debug("token: %v", token)
 
 	// создаем папку со случайным именем: modupdater-jwu8293ui(к примеру)
-
 	tmpDir, err := os.MkdirTemp("", "modupdater-*")
 	if err != nil {
 		logger.Error("Failed to create a directory: %v", err)
-		return "", err
+		return "", nil, err
 	}
 	clone := repoURL
 	if token != "" && strings.HasPrefix(repoURL, "https://") {
@@ -38,8 +37,15 @@ func Clone(repoURL string, token string, logger *logger.Logger) (string, error) 
 	if err != nil {
 		logger.Error("Clone failed: %v", err)
 		os.RemoveAll(tmpDir)
-		return "", fmt.Errorf("git clone failed: %s: %v", string(output), err)
+		return "", nil, fmt.Errorf("git clone failed: %s: %v", string(output), err)
+	}
+	remove := func() {
+		if err := os.RemoveAll(tmpDir); err != nil {
+			logger.Error("failed to remove directory: %v %s", err, tmpDir)
+		} else {
+			logger.Debug("successfully removed: %s", tmpDir)
+		}
 	}
 
-	return tmpDir, nil
+	return tmpDir, remove, nil
 }
